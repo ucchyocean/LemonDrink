@@ -1,0 +1,5 @@
+name: ${project.name}
+version: ${project.version}
+main: org.bitbucket.ucchy.lemon.LemonDrink
+Description: LemonDrink
+author: ucchy
