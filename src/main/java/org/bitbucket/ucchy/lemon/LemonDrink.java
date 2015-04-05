@@ -19,7 +19,9 @@ import java.util.zip.ZipEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,8 +29,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * レモン味の飲料のやつを再現するプラグイン
@@ -51,8 +54,9 @@ public class LemonDrink extends JavaPlugin implements Listener {
 
         // レシピの登録
         drink = new ItemStack(Material.POTION);
-        ItemMeta meta = drink.getItemMeta();
+        PotionMeta meta = (PotionMeta)drink.getItemMeta();
         meta.setDisplayName(itemName);
+        meta.setMainEffect(PotionEffectType.FAST_DIGGING);
         drink.setItemMeta(meta);
         addLemonRecipe(drink);
 
@@ -112,8 +116,12 @@ public class LemonDrink extends JavaPlugin implements Listener {
                 value = player.getMaxHealth();
             }
             player.setHealth(value);
+            player.getWorld().playEffect(player.getLocation(), Effect.POTION_BREAK, 3);
+            player.getWorld().playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+
         } else {
             player.sendMessage(ChatColor.GRAY + "土の味がした…");
+
         }
     }
 
