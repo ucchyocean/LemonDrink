@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bitbucket.ucchy</groupId>
   <artifactId>LemonDrink</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
   <licenses>
     <license>
@@ -67,14 +67,9 @@
 
   <repositories>
     <repository>
-      <id>bukkit-repo</id>
-      <name>Craft Bukkit Maven Repository</name>
-      <url>http://repo.bukkit.org/content/groups/public</url>
-    </repository>
-    <repository>
-      <id>rasagne-repo</id>
-      <name>Craft Bukkit Alternate Nexus Repository</name>
-      <url>http://lasagne.tgnmc.com:8081/nexus/content/groups/public</url>
+      <id>spigot-repo</id>
+      <name>Spigot Maven Repository</name>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
     </repository>
   </repositories>
 
@@ -82,7 +77,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.8-R0.1-SNAPSHOT</version>
+      <version>1.9-R0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

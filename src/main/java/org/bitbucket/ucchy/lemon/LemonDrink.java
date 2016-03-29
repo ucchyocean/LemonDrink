@@ -5,23 +5,12 @@
  */
 package org.bitbucket.ucchy.lemon;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,6 +35,7 @@ public class LemonDrink extends JavaPlugin implements Listener {
     /**
      * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
 
@@ -90,7 +80,7 @@ public class LemonDrink extends JavaPlugin implements Listener {
         }
         File file = new File(getDataFolder(), "config.yml");
         if ( !file.exists() ) {
-            copyFileFromJar(getFile(), file, "config_ja.yml");
+            Utility.copyFileFromJar(getFile(), file, "config_ja.yml", false);
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
@@ -117,7 +107,7 @@ public class LemonDrink extends JavaPlugin implements Listener {
             }
             player.setHealth(value);
             player.getWorld().playEffect(player.getLocation(), Effect.POTION_BREAK, 3);
-            player.getWorld().playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+            player.getWorld().playSound(player.getLocation(), SoundEnum.LEVEL_UP.getBukkit(), 1, 1);
 
         } else {
             player.sendMessage(ChatColor.GRAY + "土の味がした…");
@@ -139,88 +129,6 @@ public class LemonDrink extends JavaPlugin implements Listener {
 
         return item.getItemMeta().getDisplayName().equals(
                 drink.getItemMeta().getDisplayName());
-    }
-
-    /**
-     * jarファイルの中に格納されているテキストファイルを、jarファイルの外にコピーするメソッド<br/>
-     * WindowsだとS-JISで、MacintoshやLinuxだとUTF-8で保存されます。
-     * @param jarFile jarファイル
-     * @param targetFile コピー先
-     * @param sourceFilePath コピー元
-     */
-    private static void copyFileFromJar(
-            File jarFile, File targetFile, String sourceFilePath) {
-
-        JarFile jar = null;
-        InputStream is = null;
-        FileOutputStream fos = null;
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-
-        File parent = targetFile.getParentFile();
-        if ( !parent.exists() ) {
-            parent.mkdirs();
-        }
-
-        try {
-            jar = new JarFile(jarFile);
-            ZipEntry zipEntry = jar.getEntry(sourceFilePath);
-            is = jar.getInputStream(zipEntry);
-
-            fos = new FileOutputStream(targetFile);
-
-            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            writer = new BufferedWriter(new OutputStreamWriter(fos));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                writer.write(line);
-                writer.newLine();
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if ( jar != null ) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if ( writer != null ) {
-                try {
-                    writer.flush();
-                    writer.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if ( reader != null ) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if ( fos != null ) {
-                try {
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if ( is != null ) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-        }
     }
 
     private String replaceColorCode(String source) {
